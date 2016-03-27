@@ -16,6 +16,9 @@ commands:
   colour:
     description: Set your or another person's name's color.
     usage: /colour [colour code], /colour [Player] [colour code]
+  realnicks:
+    description: Lists online players, with real names and nick names.
+    usage: /realnicks
 permissions:
   nicknames.nick:
     description: Permission on nick yourself
@@ -35,3 +38,5 @@ permissions:
   nicknames.color.other:
     desciption: Color another person's name
     default: op
+  nicknames.realnicks:
+    decsription: Check online true names
