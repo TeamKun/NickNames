@@ -237,8 +237,6 @@ public class Main extends JavaPlugin
                 String[] newArgs = new String[1];
                 newArgs[0] = newName;
                 setNick(player, newName);
-
-
             }
             else
             {
@@ -252,6 +250,42 @@ public class Main extends JavaPlugin
                 .hasPermission("nicknames.color.other"))
         {
 
+            String playerToChange = args[0];
+            Player target = null;
+
+            for(Player p : getServer().getOnlinePlayers())
+            {
+                if(p.getName().equalsIgnoreCase(playerToChange))
+                {
+                    target = p;
+                    break;
+                }
+            }
+
+            String newName = null;
+            char newColour = args[1].charAt(0);
+
+            for(ChatColor c : ChatColor.values())
+            {
+                if(c.getChar() == newColour)
+                {
+                    newName = c+target.getName()+ChatColor.RESET;
+                }
+            }
+
+            if(newName != null)
+            {
+                String[] newArgs = new String[1];
+                newArgs[0] = newName;
+                setNick(target, newName);
+            }
+            else
+            {
+                player.sendMessage(ChatColor.DARK_RED+"Syntax Error!");
+                player.sendMessage("Usage:");
+                player.sendMessage("/colour [1-9, a-f] - Set your name's " +
+                        "colour");
+            }
         }
         else if(!player.hasPermission("nicknames.color") || !player
                 .hasPermission("nicknames.color.other"))
