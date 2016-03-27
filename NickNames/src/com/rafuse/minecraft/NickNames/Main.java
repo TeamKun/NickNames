@@ -82,81 +82,7 @@ public class Main extends JavaPlugin
         else if(args.length==1 && player.hasPermission("nicknames.nick"))
         {
             String newName = args[0].replace("&", "§")+"§f§r";
-
-            File userFile = new File(new File("").getAbsolutePath()
-                    +"/plugins/NickNames/"+player.getName().toLowerCase()+".yml");
-            if(userFile.isFile())
-            {
-                PrintWriter writer;
-                try
-                {
-                    writer = new PrintWriter(userFile);
-                }
-                catch(IOException e)
-                {
-                    getLogger().warning(e+"");
-                    writer = null;
-                }
-                if(writer != null)
-                {
-                    writer.println(newName);
-                }
-                writer.close();
-            }
-            else
-            {
-                getLogger().info("No file information found for "+player
-                        .getName()+": Will create now.");
-                try
-                {
-                    userFile.createNewFile();
-                }
-                catch(IOException e)
-                {
-                    getLogger().warning(e+"");
-                }
-
-                PrintWriter writer;
-                try
-                {
-                    writer = new PrintWriter(userFile);
-                }
-                catch(IOException e)
-                {
-                    getLogger().warning(e + "");
-                    writer = null;
-                }
-
-                if(writer != null)
-                {
-                    writer.println(newName);
-                }
-
-                try
-                {
-                    writer.close();
-                }
-                catch(NullPointerException e)
-                {
-                    getLogger().warning(e+"");
-                }
-            }
-
-            try
-            {
-                player.setDisplayName(newName);
-                player.setPlayerListName(newName);
-                getLogger().info("Changed "+player.getName()+ChatColor
-                        .RESET+"'s name to " + player.getDisplayName() +
-                        ChatColor.RESET + ".");
-                Bukkit.broadcastMessage(PREFIX+" Changed "+player.getName()
-                        +ChatColor.RESET + "'s name to " + player
-                        .getDisplayName() + ChatColor.RESET + ".");
-            }
-            catch(IllegalArgumentException e)
-            {
-                getLogger().warning(e.getMessage());
-            }
+            setNick(player, newName);
         }
         else if(args.length == 2 && player.hasPermission("nicknames" +
                 ".nick.other"))
@@ -175,81 +101,7 @@ public class Main extends JavaPlugin
                 }
             }
 
-            File userFile = new File(new File("").getAbsolutePath()
-                    +"/plugins/NickNames/"+target.getName().toLowerCase()+".yml");
-            if(userFile.isFile())
-            {
-                PrintWriter writer;
-                try
-                {
-                    writer = new PrintWriter(userFile);
-                }
-                catch(IOException e)
-                {
-                    getLogger().warning(e+"");
-                    writer = null;
-                }
-                if(writer != null)
-                {
-                    writer.println(newName);
-                }
-                writer.close();
-            }
-            else
-            {
-                getLogger().info("No file information found for "+target
-                        .getName()+": Will create now.");
-                try
-                {
-                    userFile.createNewFile();
-                }
-                catch(IOException e)
-                {
-                    getLogger().warning(e+"");
-                }
-
-                PrintWriter writer;
-                try
-                {
-                    writer = new PrintWriter(userFile);
-                }
-                catch(IOException e)
-                {
-                    getLogger().warning(e + "");
-                    writer = null;
-                }
-
-                if(writer != null)
-                {
-                    writer.println(newName);
-                }
-
-                try
-                {
-                    writer.close();
-                }
-                catch(NullPointerException e)
-                {
-                    getLogger().warning(""+e);
-                }
-
-            }
-
-            try
-            {
-                target.setDisplayName(newName);
-                target.setPlayerListName(newName);
-                getLogger().info("Changed "+target.getName()+ChatColor
-                        .RESET+"'s name to " + target.getDisplayName() +
-                        ChatColor.RESET + ".");
-                Bukkit.broadcastMessage(PREFIX+" Changed " + ""+target
-                        .getName() + ChatColor.RESET+ "'s name to " +
-                        target.getDisplayName() + ChatColor.RESET + ".");
-            }
-            catch(IllegalArgumentException e)
-            {
-                getLogger().warning(e.getMessage());
-            }
+            setNick(target, newName);
         }
         else if(!player.hasPermission("nicknames.nick") && !player
                 .hasPermission("nicknames.nick.other"))
@@ -372,6 +224,7 @@ public class Main extends JavaPlugin
         {
             String newName = null;
             char newColour = args[0].charAt(0);
+
             for(ChatColor c : ChatColor.values())
             {
                 if(c.getChar() == newColour)
@@ -383,7 +236,9 @@ public class Main extends JavaPlugin
             {
                 String[] newArgs = new String[1];
                 newArgs[0] = newName;
-                nick(player, null, null, newArgs);
+                setNick(player, newName);
+
+
             }
             else
             {
@@ -404,7 +259,7 @@ public class Main extends JavaPlugin
             player.sendMessage(PREFIX+" I'm sorry, you do not have access " +
                     "to this command.");
         }
-        else if(args.length > 2)
+        else if(args.length > 2 || args[0].length() > 1)
         {
             player.sendMessage(ChatColor.DARK_RED+"Syntax Error!");
             player.sendMessage("Usage:");
@@ -412,5 +267,83 @@ public class Main extends JavaPlugin
                     "colour");
         }
         return true;
+    }
+
+    private void setNick(
+            Player player,
+            String newName
+    )
+    {
+        File userFile = new File(new File("").getAbsolutePath()
+                +"/plugins/NickNames/"+player.getName().toLowerCase()+".yml");
+        if(userFile.isFile())
+        {
+            PrintWriter writer;
+            try
+            {
+                writer = new PrintWriter(userFile);
+            }
+            catch(IOException e)
+            {
+                getLogger().warning(e+"");
+                writer = null;
+            }
+            if(writer != null)
+            {
+                writer.println(newName);
+            }
+            writer.close();
+        }
+        else
+        {
+            getLogger().info("No file information found for " + player
+                    .getName() + ": Will create now.");
+            try
+            {
+                userFile.createNewFile();
+            } catch (IOException e)
+            {
+                getLogger().warning(e + "");
+            }
+
+            PrintWriter writer;
+            try
+            {
+                writer = new PrintWriter(userFile);
+            } catch (IOException e)
+            {
+                getLogger().warning(e + "");
+                writer = null;
+            }
+
+            if (writer != null)
+            {
+                writer.println(newName);
+            }
+
+            try
+            {
+                writer.close();
+            } catch (NullPointerException e)
+            {
+                getLogger().warning(e + "");
+            }
+        }
+
+        try
+        {
+            player.setDisplayName(newName);
+            player.setPlayerListName(newName);
+            getLogger().info("Changed "+player.getName()+ChatColor
+                    .RESET+"'s name to " + player.getDisplayName() +
+                    ChatColor.RESET + ".");
+            Bukkit.broadcastMessage(PREFIX+" Changed "+player.getName()
+                    +ChatColor.RESET + "'s name to " + player
+                    .getDisplayName() + ChatColor.RESET + ".");
+        }
+        catch(IllegalArgumentException e)
+        {
+            getLogger().warning(e.getMessage());
+        }
     }
 }
