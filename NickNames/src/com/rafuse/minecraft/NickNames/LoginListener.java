@@ -33,10 +33,11 @@ public class LoginListener implements Listener
 
                 event.getPlayer().setDisplayName(newName);
                 event.getPlayer().setPlayerListName(newName);
+
+                reader.close();
             }
             catch(IOException e)
             {
-                newName = null;
                 new Main().getLogger().warning(e+"");
             }
         }
