@@ -17,6 +17,9 @@ import java.io.PrintWriter;
  */
 public class Main extends JavaPlugin
 {
+    public static final String PREFIX = ChatColor.RESET+"["+ChatColor
+        .GOLD+"NickNames" + ChatColor.RESET+ "]";
+
     private File data;
 
     @Override
@@ -108,7 +111,14 @@ public class Main extends JavaPlugin
                         writer.println(newName);
                     }
 
-                    writer.close();
+                    try
+                    {
+                        writer.close();
+                    }
+                    catch(NullPointerException e)
+                    {
+                        getLogger().warning(e+"");
+                    }
                 }
 
                 try
@@ -118,11 +128,9 @@ public class Main extends JavaPlugin
                     getLogger().info("Changed "+player.getName()+ChatColor
                             .RESET+"'s name to " + player.getDisplayName() +
                             ChatColor.RESET + ".");
-                    Bukkit.broadcastMessage("["+ChatColor
-                            .GOLD+"NickNames"+ ChatColor.RESET+
-                            "] Changed "+player.getName() +ChatColor.RESET+ 
-                            "'s name to " + player.getDisplayName() +
-                            ChatColor.RESET + ".");
+                    Bukkit.broadcastMessage(PREFIX+" Changed "+player.getName()
+                            +ChatColor.RESET + "'s name to " + player
+                            .getDisplayName() + ChatColor.RESET + ".");
                 }
                 catch(IllegalArgumentException e)
                 {
@@ -195,7 +203,15 @@ public class Main extends JavaPlugin
                         writer.println(newName);
                     }
 
-                    writer.close();
+                    try
+                    {
+                        writer.close();
+                    }
+                    catch(NullPointerException e)
+                    {
+                        getLogger().warning(""+e);
+                    }
+
                 }
 
                 try
@@ -205,10 +221,8 @@ public class Main extends JavaPlugin
                     getLogger().info("Changed "+target.getName()+ChatColor
                             .RESET+"'s name to " + target.getDisplayName() +
                             ChatColor.RESET + ".");
-                    Bukkit.broadcastMessage("["+ChatColor
-                            .GOLD+"NickNames"+ ChatColor.RESET+
-                            "] Changed " + ""+target.getName() +
-                            ChatColor.RESET+ "'s name to " +
+                    Bukkit.broadcastMessage(PREFIX+" Changed " + ""+target
+                            .getName() + ChatColor.RESET+ "'s name to " +
                             target.getDisplayName() + ChatColor.RESET + ".");
                 }
                 catch(IllegalArgumentException e)
