@@ -6,21 +6,24 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+
 /**
  * Created by Sierra6767 on 3/26/2016.
  */
 public class Main extends JavaPlugin
 {
+    private File data;
     @Override
     public void onEnable()
     {
-        super.onEnable();
+        new File(new File("").getAbsolutePath()+"/plugins/NickNames").mkdir();
     }
 
     @Override
     public void onDisable()
     {
-        super.onDisable();
+        data = null;
     }
 
     @Override
