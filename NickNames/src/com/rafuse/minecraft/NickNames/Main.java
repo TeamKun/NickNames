@@ -202,9 +202,9 @@ public class Main extends JavaPlugin
                             .RESET+"'s name to " + target.getDisplayName() +
                             ChatColor.RESET + ".");
                     Bukkit.broadcastMessage(ChatColor.DARK_RED+"FRED: "+
-                            ChatColor.RESET+"Changed " + ""+player
+                            ChatColor.RESET+"Changed " + ""+target
                             .getName() +ChatColor.RESET+ "'s name to " +
-                            player.getDisplayName() + ChatColor.RESET + ".");
+                            target.getDisplayName() + ChatColor.RESET + ".");
                 }
                 catch(IllegalArgumentException e)
                 {
