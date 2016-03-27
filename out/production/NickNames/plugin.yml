@@ -1,0 +1,9 @@
+name: NickNames
+version: 0.0.3
+description: A plugin to change the nick names of users.
+author: Halo4356
+main: com.rafuse.minecraft.NickNames.Main
+commands:
+  nick:
+    description: Set a nickname for a target user.
+    usage: /nick [Player]
