@@ -230,6 +230,8 @@ public class Main extends JavaPlugin
         else if(args.length == 1 && args[0].equalsIgnoreCase("list") &&
                 player.hasPermission("nicknames.color"))
         {
+            player.sendMessage(PREFIX+" The following colours are " +
+                    "availiable:");
             player.sendMessage(ChatColor.BLACK+"black "+ChatColor
                     .DARK_BLUE+"dark-blue "+ChatColor
                     .DARK_GREEN+"dark-green "+ChatColor
@@ -242,7 +244,7 @@ public class Main extends JavaPlugin
                     .AQUA+"aqua "+ChatColor.RED+"red "+ChatColor
                     .LIGHT_PURPLE+"light-purple "+ChatColor.YELLOW+"yellow " +
                     ""+ChatColor.WHITE+"white ");
-            player.sendMessage("Other uses:");
+            player.sendMessage(PREFIX+" Other uses:");
             player.sendMessage(ChatColor.STRIKETHROUGH+"strikethough " +
                     ""+ChatColor.RESET +
                     ""+ChatColor.UNDERLINE+"underline "+ChatColor.RESET+ChatColor
