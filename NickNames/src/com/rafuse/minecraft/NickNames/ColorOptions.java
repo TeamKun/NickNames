@@ -9,7 +9,7 @@ public enum ColorOptions
 {
     BLACK("black", ChatColor.BLACK),
     DARK_BLUE("dark-blue", ChatColor.DARK_BLUE),
-    DARK_GREEN("dark-gereen", ChatColor.DARK_GREEN),
+    DARK_GREEN("dark-green", ChatColor.DARK_GREEN),
     DARK_AQUA("dark-aqua", ChatColor.DARK_AQUA),
     DARK_RED("dark-red", ChatColor.DARK_RED),
     DARK_PURPLE("dark-purple", ChatColor.DARK_PURPLE),

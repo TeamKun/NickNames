@@ -244,11 +244,14 @@ public class Main extends JavaPlugin
                     .AQUA+"aqua "+ChatColor.RED+"red "+ChatColor
                     .LIGHT_PURPLE+"light-purple "+ChatColor.YELLOW+"yellow " +
                     ""+ChatColor.WHITE+"white ");
+            player.sendMessage("");
             player.sendMessage(PREFIX+" Other uses:");
-            player.sendMessage(ChatColor.STRIKETHROUGH+"strikethough " +
-                    ""+ChatColor.RESET +
-                    ""+ChatColor.UNDERLINE+"underline "+ChatColor.RESET+ChatColor
-                    .BOLD+"bold "+ChatColor.RESET+ChatColor.ITALIC+"italic "+
+            player.sendMessage(ChatColor.STRIKETHROUGH+"strikethough "+
+                    ChatColor.RESET +
+                    " "+ChatColor.UNDERLINE+"underline"+ChatColor
+                    .RESET+" "+ChatColor
+                    .BOLD+"bold"+ChatColor.RESET+" "+ChatColor
+                    .ITALIC+"italic"+
                     ChatColor.RESET);
         }
         else if(args.length == 1 && player.hasPermission("nicknames.color"))
@@ -258,7 +261,8 @@ public class Main extends JavaPlugin
             {
                 if(args[0].equalsIgnoreCase(c.getName()))
                 {
-                    newName = c+player.getName()+ChatColor.RESET;
+                    newName = c+""+player.getName().toUpperCase().charAt(0)
+                            +player.getName().substring(1) +ChatColor.RESET;
                 }
             }
             if(newName == null)
