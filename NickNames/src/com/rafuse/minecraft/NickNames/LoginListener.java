@@ -20,7 +20,7 @@ public class LoginListener implements Listener
 
 
         File playerInfo = new File(new File("").getAbsolutePath()
-                +"/plugins/NickNames/"+event.getPlayer().getName()+".yml");
+                +"/plugins/NickNames/"+event.getPlayer().getName().toLowerCase()+".yml");
 
         if(playerInfo.isFile())
         {

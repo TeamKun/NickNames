@@ -79,7 +79,7 @@ public class Main extends JavaPlugin
             String newName = args[0].replace("&", "§")+"§f§r";
 
             File userFile = new File(new File("").getAbsolutePath()
-                    +"/plugins/NickNames/"+player.getName()+".yml");
+                    +"/plugins/NickNames/"+player.getName().toLowerCase()+".yml");
             if(userFile.isFile())
             {
                 PrintWriter writer;
@@ -171,7 +171,7 @@ public class Main extends JavaPlugin
             }
 
             File userFile = new File(new File("").getAbsolutePath()
-                    +"/plugins/NickNames/"+target.getName()+".yml");
+                    +"/plugins/NickNames/"+target.getName().toLowerCase()+".yml");
             if(userFile.isFile())
             {
                 PrintWriter writer;
@@ -279,15 +279,16 @@ public class Main extends JavaPlugin
         if(args.length == 0 && player.hasPermission("nicknames.reset"))
         {
             File userData = new File(new File("").getAbsolutePath()
-                        +"/plugins/NickNames/"+player.getName()+".yml");
+                        +"/plugins/NickNames/"+player.getName().toLowerCase()+
+                    ".yml");
 
             if(userData.isFile())
             {
                 userData.delete();
                 player.setDisplayName(player.getName());
                 player.setPlayerListName(player.getName());
-                player.sendMessage(PREFIX+" Your nickname has been reset to" +
-                        " default.");
+                Bukkit.broadcastMessage(PREFIX+" "+player.getName()+"'s " +
+                        "nickname has been reset to default.");
             }
             else
             {
@@ -301,7 +302,7 @@ public class Main extends JavaPlugin
             String reset = args[0];
 
             File userData = new File(new File("").getAbsolutePath()
-                    +"/plugins/NickNames/"+reset+".yml");
+                    +"/plugins/NickNames/"+reset.toLowerCase()+".yml");
 
             if(userData.isFile())
             {
@@ -319,8 +320,8 @@ public class Main extends JavaPlugin
                     target.setDisplayName(target.getName());
                     target.setPlayerListName(target.getName());
                 }
-                player.sendMessage(PREFIX+" "+reset+"'s nickname has been " +
-                        "reset to default.");
+                Bukkit.broadcastMessage(PREFIX+" "+reset+"'s nickname " +
+                        "has been reset to default.");
             }
             else
             {
