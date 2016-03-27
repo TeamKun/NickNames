@@ -16,9 +16,12 @@ import java.io.PrintWriter;
 public class Main extends JavaPlugin
 {
     private File data;
+
     @Override
     public void onEnable()
     {
+        getServer().getPluginManager().registerEvents(new LoginListener(),
+                this);
         new File(new File("").getAbsolutePath()+"/plugins/NickNames").mkdir();
     }
 
@@ -53,6 +56,23 @@ public class Main extends JavaPlugin
             {
                 String newName = args[0].replace("&", "§")+"§f§r";
 
+
+            }
+            else if(args.length == 2)
+            {
+                String playerToChange = args[0];
+                String newName = args[1].replace("&", "§")+"§f§r";
+
+                Player target;
+
+                for(Player p : getServer().getOnlinePlayers())
+                {
+                    if(p.getName().equals(playerToChange))
+                    {
+                        target = p;
+                    }
+                }
+
                 File userFile = new File(new File("").getAbsolutePath()
                         +"/plugins/NickNames/"+player.getName()+".yml");
                 if(userFile.isFile())
@@ -76,7 +96,7 @@ public class Main extends JavaPlugin
                 else
                 {
                     getLogger().info("No file information found for "+player
-                    .getName()+": Will create now.");
+                            .getName()+": Will create now.");
                     try
                     {
                         userFile.createNewFile();
@@ -109,38 +129,17 @@ public class Main extends JavaPlugin
                 {
                     player.setDisplayName(newName);
                     player.setPlayerListName(newName);
+                    getLogger().info("Changed "+player.getName()+"'s name " +
+                            "to "player.getDisplayName()+".");
                 }
                 catch(IllegalArgumentException e)
                 {
                     getLogger().warning(e.getMessage());
                 }
             }
-            else if(args.length == 2)
-            {
-                String playerToChange = args[0];
-                String newName = args[1].replace("&", "§")+"§f§r";
-
-                for(Player p : getServer().getOnlinePlayers())
-                {
-                    if(p.getName().equals(playerToChange))
-                    {
-                        try
-                        {
-                            p.setDisplayName(newName);
-                            p.setPlayerListName(newName);
-                            getLogger().info("Changed ");
-                        }
-                        catch(IllegalArgumentException e)
-                        {
-                            getLogger().warning(e.getMessage());
-                        }
-                    }
-                }
-            }
             else
             {
                 sender.sendMessage(ChatColor.DARK_RED+"Syntax Error!");
-                sender.sendMessage("");
                 sender.sendMessage("Usage:");
                 sender.sendMessage("/nick [Player] [Nickname] - Nick " +
                         "another player");
