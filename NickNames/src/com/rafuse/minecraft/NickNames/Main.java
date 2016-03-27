@@ -297,7 +297,8 @@ public class Main extends JavaPlugin
             {
                 if(args[1].equalsIgnoreCase(c.getName()))
                 {
-                    newName = c+target.getName()+ChatColor.RESET;
+                    newName = c+""+target.getName().toUpperCase().charAt(0)+
+                    target.getName().substring(1)+ChatColor.RESET;
                 }
             }
 
