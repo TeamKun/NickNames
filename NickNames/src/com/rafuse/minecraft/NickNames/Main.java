@@ -211,6 +211,111 @@ public class Main extends JavaPlugin
             String[] args
     )
     {
+        if(args.length == 1 && args[0].length() == 1)
+            return legacyColour(sender, command, label, args);
+        else if (args.length == 2 && args[1].length() == 1)
+            return legacyColour(sender, command, label, args);
+
+        if(!(sender instanceof Player)) return false;
+
+        Player player = (Player) sender;
+
+        if(args.length == 0 && (player.hasPermission("nicknames.color") ||
+                player.hasPermission("nicknames.color.other")))
+        {
+            player.sendMessage("Usage:");
+            player.sendMessage("/colour [colour] - Set your name's colour");
+            player.sendMessage("see /colour list for list of colours.");
+        }
+        else if(args.length == 1 && args[0].equalsIgnoreCase("list") &&
+                player.hasPermission("nicknames.color"))
+        {
+            player.sendMessage(ChatColor.BLACK+"black "+ChatColor
+                    .DARK_BLUE+"dark-blue "+ChatColor
+                    .DARK_GREEN+"dark-green "+ChatColor
+                    .DARK_AQUA+"dark-aqua "+ChatColor.DARK_RED+"dark-red ");
+            player.sendMessage(ChatColor.DARK_PURPLE+"dark-purple " +
+                    ""+ChatColor.GOLD+"gold "+ChatColor.GRAY+"gray " +
+                    ""+ChatColor.DARK_GRAY+"dark-gray "+ChatColor
+                    .BLUE+"blue ");
+            player.sendMessage(ChatColor.GREEN+"green "+ChatColor
+                    .AQUA+"aqua "+ChatColor.RED+"red "+ChatColor
+                    .LIGHT_PURPLE+"light-purple "+ChatColor.YELLOW+"yellow " +
+                    ""+ChatColor.WHITE+"white ");
+            player.sendMessage("Other uses:");
+            player.sendMessage(ChatColor.STRIKETHROUGH+"strikethough " +
+                    ""+ChatColor.UNDERLINE+"underline "+ChatColor
+                    .BOLD+"bold "+ChatColor.ITALIC+"italic ");
+        }
+        else if(args.length == 1 && player.hasPermission("nicknames.color"))
+        {
+            String newName = null;
+            for(ColorOptions c : ColorOptions.values())
+            {
+                if(args[0].equalsIgnoreCase(c.getName()))
+                {
+                    newName = c+player.getName();
+                }
+            }
+            if(newName == null)
+            {
+                sender.sendMessage(ChatColor.DARK_RED+"Syntax Error!");
+                player.sendMessage("Usage:");
+                player.sendMessage("/colour [colour] - Set your name's colour");
+                player.sendMessage("see /colour list for list of colours.");
+            }
+            else
+            {
+                setNick(player, newName);
+            }
+        }
+        else if(args.length == 2 && player.hasPermission("nicknames.color" +
+                ".other"))
+        {
+            String playerToChange = args[0];
+            Player target = null;
+
+            for(Player p : getServer().getOnlinePlayers())
+            {
+                if(p.getName().equalsIgnoreCase(playerToChange))
+                {
+                    target = p;
+                    break;
+                }
+            }
+
+            String newName = null;
+            for(ColorOptions c : ColorOptions.values())
+            {
+                if(args[1].equalsIgnoreCase(c.getName()))
+                {
+                    newName = c+target.getName();
+                }
+            }
+        }
+        else if(!player.hasPermission("nicknames.color") || !player
+                .hasPermission("nicknames.color.other"))
+        {
+            player.sendMessage(PREFIX+" I'm sorry, you do not have access " +
+                    "to this command.");
+        }
+        else if(args.length > 2 || args[0].length() > 1)
+        {
+            sender.sendMessage(ChatColor.DARK_RED+"Syntax Error!");
+            player.sendMessage("Usage:");
+            player.sendMessage("/colour [colour] - Set your name's colour");
+            player.sendMessage("see /colour list for list of colours.");
+        }
+        return true;
+    }
+
+    public boolean legacyColour(
+            CommandSender sender,
+            Command command,
+            String label,
+            String[] args
+    )
+    {
         if(!(sender instanceof Player)) return false;
 
         Player player = (Player) sender;
