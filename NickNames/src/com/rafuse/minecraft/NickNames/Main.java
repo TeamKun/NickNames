@@ -135,7 +135,7 @@ public class Main extends JavaPlugin
 
                 for(Player p : getServer().getOnlinePlayers())
                 {
-                    if(p.getName().equals(playerToChange))
+                    if(p.getName().equalsIgnoreCase(playerToChange))
                     {
                         target = p;
                         break;
