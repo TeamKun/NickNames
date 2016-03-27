@@ -1,5 +1,5 @@
 name: NickNames
-version: 0.0.4
+version: 0.1.0
 description: A plugin to change the nick names of users.
 author: Halo4356
 main: com.rafuse.minecraft.NickNames.Main

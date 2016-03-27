@@ -1,5 +1,6 @@
 package com.rafuse.minecraft.NickNames;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -55,23 +56,6 @@ public class Main extends JavaPlugin
             else if(args.length==1)
             {
                 String newName = args[0].replace("&", "§")+"§f§r";
-
-
-            }
-            else if(args.length == 2)
-            {
-                String playerToChange = args[0];
-                String newName = args[1].replace("&", "§")+"§f§r";
-
-                Player target;
-
-                for(Player p : getServer().getOnlinePlayers())
-                {
-                    if(p.getName().equals(playerToChange))
-                    {
-                        target = p;
-                    }
-                }
 
                 File userFile = new File(new File("").getAbsolutePath()
                         +"/plugins/NickNames/"+player.getName()+".yml");
@@ -129,8 +113,98 @@ public class Main extends JavaPlugin
                 {
                     player.setDisplayName(newName);
                     player.setPlayerListName(newName);
-                    getLogger().info("Changed "+player.getName()+"'s name " +
-                            "to "player.getDisplayName()+".");
+                    getLogger().info("Changed "+player.getName()+ChatColor
+                            .RESET+"'s name to " + player.getDisplayName() +
+                            ChatColor.RESET + ".");
+                    Bukkit.broadcastMessage(ChatColor.DARK_RED+"FRED: "+
+                            ChatColor.RESET+"Changed " + ""+player
+                            .getName() +ChatColor.RESET+ "'s name to " +
+                            player.getDisplayName() + ChatColor.RESET + ".");
+                }
+                catch(IllegalArgumentException e)
+                {
+                    getLogger().warning(e.getMessage());
+                }
+            }
+            else if(args.length == 2)
+            {
+                String playerToChange = args[0];
+                String newName = args[1].replace("&", "§")+"§f§r";
+
+                Player target = null;
+
+                for(Player p : getServer().getOnlinePlayers())
+                {
+                    if(p.getName().equals(playerToChange))
+                    {
+                        target = p;
+                        break;
+                    }
+                }
+
+                File userFile = new File(new File("").getAbsolutePath()
+                        +"/plugins/NickNames/"+target.getName()+".yml");
+                if(userFile.isFile())
+                {
+                    PrintWriter writer;
+                    try
+                    {
+                        writer = new PrintWriter(userFile);
+                    }
+                    catch(IOException e)
+                    {
+                        getLogger().warning(e+"");
+                        writer = null;
+                    }
+                    if(writer != null)
+                    {
+                        writer.println(newName);
+                    }
+                    writer.close();
+                }
+                else
+                {
+                    getLogger().info("No file information found for "+target
+                            .getName()+": Will create now.");
+                    try
+                    {
+                        userFile.createNewFile();
+                    }
+                    catch(IOException e)
+                    {
+                        getLogger().warning(e+"");
+                    }
+
+                    PrintWriter writer;
+                    try
+                    {
+                        writer = new PrintWriter(userFile);
+                    }
+                    catch(IOException e)
+                    {
+                        getLogger().warning(e + "");
+                        writer = null;
+                    }
+
+                    if(writer != null)
+                    {
+                        writer.println(newName);
+                    }
+
+                    writer.close();
+                }
+
+                try
+                {
+                    target.setDisplayName(newName);
+                    target.setPlayerListName(newName);
+                    getLogger().info("Changed "+target.getName()+ChatColor
+                            .RESET+"'s name to " + target.getDisplayName() +
+                            ChatColor.RESET + ".");
+                    Bukkit.broadcastMessage(ChatColor.DARK_RED+"FRED: "+
+                            ChatColor.RESET+"Changed " + ""+player
+                            .getName() +ChatColor.RESET+ "'s name to " +
+                            player.getDisplayName() + ChatColor.RESET + ".");
                 }
                 catch(IllegalArgumentException e)
                 {
