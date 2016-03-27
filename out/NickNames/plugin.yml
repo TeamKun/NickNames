@@ -10,6 +10,10 @@ commands:
   reset:
     description: Reset your or another person's nickname.
     usage: /reset, /reset [Player]
+  color:
+    description: Set your or another person's name's color.
+    usage: /color [color code], /colour [colour code], /color [Player]
+    [color code], /colour [Player], [colour code]
 permissions:
   nicknames.nick:
     description: Permission on nick yourself
