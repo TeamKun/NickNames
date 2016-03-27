@@ -6,4 +6,11 @@ main: com.rafuse.minecraft.NickNames.Main
 commands:
   nick:
     description: Set a nickname for a target user.
-    usage: /nick [Player]
+    usage: /nick [Player] [Nickname], /nick [Nickname]
+permissions:
+  nicknames.nick:
+    description: Permission on nick yourself
+    default: op
+  nicknames.nick.other:
+    desciption: Permission to nick others
+    default: op
