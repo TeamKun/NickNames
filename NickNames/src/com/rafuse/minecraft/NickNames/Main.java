@@ -211,10 +211,12 @@ public class Main extends JavaPlugin
             String[] args
     )
     {
+        /**
         if(args.length == 1 && args[0].length() == 1)
             return legacyColour(sender, command, label, args);
         else if (args.length == 2 && args[1].length() == 1)
             return legacyColour(sender, command, label, args);
+         **/
 
         if(!(sender instanceof Player)) return false;
 
