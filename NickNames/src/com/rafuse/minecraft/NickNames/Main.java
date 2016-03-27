@@ -8,9 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 
 /**
  * Created by Sierra6767 on 3/26/2016.
@@ -56,6 +54,10 @@ public class Main extends JavaPlugin
                 .getName().equalsIgnoreCase("colour"))
         {
             return colour(sender, command, label, args);
+        }
+        else if(command.getName().equalsIgnoreCase("realnicks"))
+        {
+            return realnicks(sender, command, label, args);
         }
         return false;
     }
@@ -299,6 +301,24 @@ public class Main extends JavaPlugin
             player.sendMessage("Usage:");
             player.sendMessage("/colour [1-9, a-f] - Set your name's " +
                     "colour");
+        }
+        return true;
+    }
+
+    public boolean realnicks(
+            CommandSender sender,
+            Command command,
+            String label,
+            String[] args
+    )
+    {
+        sender.sendMessage(PREFIX+" Identities of online players:");
+        for(Player p : getServer().getOnlinePlayers())
+        {
+            String message = String.format("Display Name: %s"+ChatColor
+                    .RESET+" Real Name: %s", p.getDisplayName(), p
+                    .getName());
+            sender.sendMessage(message);
         }
         return true;
     }
