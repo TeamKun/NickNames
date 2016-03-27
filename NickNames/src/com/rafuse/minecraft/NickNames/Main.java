@@ -312,8 +312,10 @@ public class Main extends JavaPlugin
             {
                 player.sendMessage(ChatColor.DARK_RED+"Syntax Error!");
                 player.sendMessage("Usage:");
-                player.sendMessage("/colour [1-9, a-f] - Set your name's " +
-                        "colour");
+                player.sendMessage("/colour [colour] - Set your name's colour");
+                player.sendMessage("/colour [player] [colour] - Set another" +
+                        " player's colour");
+                player.sendMessage("see /colour list for list of colours.");
             }
         }
         else if(!player.hasPermission("nicknames.color") || !player
@@ -327,6 +329,8 @@ public class Main extends JavaPlugin
             sender.sendMessage(ChatColor.DARK_RED+"Syntax Error!");
             player.sendMessage("Usage:");
             player.sendMessage("/colour [colour] - Set your name's colour");
+            player.sendMessage("/colour [player] [colour] - Set another" +
+                    " player's colour");
             player.sendMessage("see /colour list for list of colours.");
         }
         return true;
@@ -347,7 +351,10 @@ public class Main extends JavaPlugin
                 player.hasPermission("nicknames.color.other")))
         {
             player.sendMessage("Usage:");
-            player.sendMessage("/colour [1-9, a-f] - Set your name's colour");
+            player.sendMessage("/colour [colour] - Set your name's colour");
+            player.sendMessage("/colour [player] [colour] - Set another" +
+                    " player's colour");
+            player.sendMessage("see /colour list for list of colours.");
         }
         else if(args.length == 1 && args[0].length() == 1 && player
                 .hasPermission("nicknames.color"))
@@ -370,10 +377,12 @@ public class Main extends JavaPlugin
             }
             else
             {
-                player.sendMessage(ChatColor.DARK_RED+"Syntax Error!");
+                sender.sendMessage(ChatColor.DARK_RED+"Syntax Error!");
                 player.sendMessage("Usage:");
-                player.sendMessage("/colour [1-9, a-f] - Set your name's " +
-                        "colour");
+                player.sendMessage("/colour [colour] - Set your name's colour");
+                player.sendMessage("/colour [player] [colour] - Set another" +
+                        " player's colour");
+                player.sendMessage("see /colour list for list of colours.");
             }
         }
         else if(args.length == 2 && args[1].length() == 1 && player
