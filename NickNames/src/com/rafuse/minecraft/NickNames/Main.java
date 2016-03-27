@@ -11,7 +11,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.NoSuchFileException;
 
 /**
  * Created by Sierra6767 on 3/26/2016.
@@ -275,7 +274,7 @@ public class Main extends JavaPlugin
         Player player;
         if(sender instanceof Player)
             player = (Player) sender;
-        else player = null;
+        else return false;
 
         if(args.length == 0 && player.hasPermission("nicknames.reset"))
         {
@@ -287,21 +286,46 @@ public class Main extends JavaPlugin
                 userData.delete();
                 player.setDisplayName(player.getName());
                 player.setPlayerListName(player.getName());
-                player.sendMessage("Your nickname has been reset to default" +
-                        ".");
+                player.sendMessage(PREFIX+" Your nickname has been reset to" +
+                        " default.");
             }
             else
             {
-                player.sendMessage("You do not have a nickname. No action " +
-                        "taken.");
+                player.sendMessage(PREFIX+" You do not have a nickname. No " +
+                        "action was taken.");
             }
         }
-        else if(args.length == 1)
+        else if(args.length == 1 && player.hasPermission("nicknames.reset" +
+                ".other"))
         {
             String reset = args[0];
-            if(reset.equalsIgnoreCase(player.getName()))
-            {
 
+            File userData = new File(new File("").getAbsolutePath()
+                    +"/plugins/NickNames/"+reset+".yml");
+
+            if(userData.isFile())
+            {
+                Player target = null;
+                for(Player p : getServer().getOnlinePlayers())
+                {
+                    if(p.getName().equalsIgnoreCase(reset))
+                    {
+                        target = p;
+                    }
+                }
+                userData.delete();
+                if(target != null)
+                {
+                    target.setDisplayName(target.getName());
+                    target.setPlayerListName(target.getName());
+                }
+                player.sendMessage(PREFIX+" "+reset+"'s nickname has been " +
+                        "reset to default.");
+            }
+            else
+            {
+                player.sendMessage(PREFIX+" "+reset+" does no currently " +
+                        "have a nickname. No action was taken");
             }
         }
         return true;
