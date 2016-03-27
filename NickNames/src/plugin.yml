@@ -23,3 +23,9 @@ permissions:
   nicknames.reset.other:
     description: Reset other peoples' names
     default: op
+  nicknames.color:
+    description: Color your name
+    default: op
+  nicknames.color.other:
+    desciption: Color another person's name
+    default: op
