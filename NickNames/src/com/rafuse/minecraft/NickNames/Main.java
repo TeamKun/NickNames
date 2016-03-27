@@ -1,5 +1,6 @@
 package com.rafuse.minecraft.NickNames;
 
+import javafx.scene.paint.Color;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -16,6 +17,9 @@ import java.io.PrintWriter;
  */
 public class Main extends JavaPlugin
 {
+    public static final String PREFIX = ChatColor.RESET+"["+ChatColor
+        .GOLD+"NickNames" + ChatColor.RESET+ "]";
+
     private File data;
 
     @Override
@@ -46,14 +50,15 @@ public class Main extends JavaPlugin
 
             Player player = (Player) sender;
 
-            if(args.length == 0)
+            if(args.length == 0 && (player.hasPermission("nicknames.nick")
+                    || player.hasPermission("nicknames.nick.other")))
             {
                 sender.sendMessage("Usage:");
                 sender.sendMessage("/nick [Player] [Nickname] - Nick " +
                         "another player");
                 sender.sendMessage("/nick [Nickname] - Nick yourself");
             }
-            else if(args.length==1)
+            else if(args.length==1 && player.hasPermission("nicknames.nick"))
             {
                 String newName = args[0].replace("&", "§")+"§f§r";
 
@@ -106,7 +111,14 @@ public class Main extends JavaPlugin
                         writer.println(newName);
                     }
 
-                    writer.close();
+                    try
+                    {
+                        writer.close();
+                    }
+                    catch(NullPointerException e)
+                    {
+                        getLogger().warning(e+"");
+                    }
                 }
 
                 try
@@ -116,17 +128,17 @@ public class Main extends JavaPlugin
                     getLogger().info("Changed "+player.getName()+ChatColor
                             .RESET+"'s name to " + player.getDisplayName() +
                             ChatColor.RESET + ".");
-                    Bukkit.broadcastMessage(ChatColor.DARK_RED+"FRED: "+
-                            ChatColor.RESET+"Changed " + ""+player
-                            .getName() +ChatColor.RESET+ "'s name to " +
-                            player.getDisplayName() + ChatColor.RESET + ".");
+                    Bukkit.broadcastMessage(PREFIX+" Changed "+player.getName()
+                            +ChatColor.RESET + "'s name to " + player
+                            .getDisplayName() + ChatColor.RESET + ".");
                 }
                 catch(IllegalArgumentException e)
                 {
                     getLogger().warning(e.getMessage());
                 }
             }
-            else if(args.length == 2)
+            else if(args.length == 2 && player.hasPermission("nicknames" +
+                    ".nick.other"))
             {
                 String playerToChange = args[0];
                 String newName = args[1].replace("&", "§")+"§f§r";
@@ -191,7 +203,15 @@ public class Main extends JavaPlugin
                         writer.println(newName);
                     }
 
-                    writer.close();
+                    try
+                    {
+                        writer.close();
+                    }
+                    catch(NullPointerException e)
+                    {
+                        getLogger().warning(""+e);
+                    }
+
                 }
 
                 try
@@ -201,9 +221,8 @@ public class Main extends JavaPlugin
                     getLogger().info("Changed "+target.getName()+ChatColor
                             .RESET+"'s name to " + target.getDisplayName() +
                             ChatColor.RESET + ".");
-                    Bukkit.broadcastMessage(ChatColor.DARK_RED+"FRED: "+
-                            ChatColor.RESET+"Changed " + ""+target
-                            .getName() +ChatColor.RESET+ "'s name to " +
+                    Bukkit.broadcastMessage(PREFIX+" Changed " + ""+target
+                            .getName() + ChatColor.RESET+ "'s name to " +
                             target.getDisplayName() + ChatColor.RESET + ".");
                 }
                 catch(IllegalArgumentException e)
@@ -211,7 +230,14 @@ public class Main extends JavaPlugin
                     getLogger().warning(e.getMessage());
                 }
             }
-            else
+            else if(!player.hasPermission("nicknames.nick") && !player
+                    .hasPermission("nicknames.nick.other"))
+            {
+                player.sendMessage("["+ ChatColor.GOLD + "NickNames"+ChatColor
+                        .RESET+"] I'm sorry, you do not have access to this" +
+                        " command.");
+            }
+            else if(args.length > 2)
             {
                 sender.sendMessage(ChatColor.DARK_RED+"Syntax Error!");
                 sender.sendMessage("Usage:");
