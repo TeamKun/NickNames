@@ -244,8 +244,10 @@ public class Main extends JavaPlugin
                     ""+ChatColor.WHITE+"white ");
             player.sendMessage("Other uses:");
             player.sendMessage(ChatColor.STRIKETHROUGH+"strikethough " +
-                    ""+ChatColor.UNDERLINE+"underline "+ChatColor
-                    .BOLD+"bold "+ChatColor.ITALIC+"italic ");
+                    ""+ChatColor.RESET +
+                    ""+ChatColor.UNDERLINE+"underline "+ChatColor.RESET+ChatColor
+                    .BOLD+"bold "+ChatColor.RESET+ChatColor.ITALIC+"italic "+
+                    ChatColor.RESET);
         }
         else if(args.length == 1 && player.hasPermission("nicknames.color"))
         {
@@ -254,7 +256,7 @@ public class Main extends JavaPlugin
             {
                 if(args[0].equalsIgnoreCase(c.getName()))
                 {
-                    newName = c+player.getName();
+                    newName = c+player.getName()+ChatColor.RESET;
                 }
             }
             if(newName == null)
@@ -289,7 +291,7 @@ public class Main extends JavaPlugin
             {
                 if(args[1].equalsIgnoreCase(c.getName()))
                 {
-                    newName = c+target.getName();
+                    newName = c+target.getName()+ChatColor.RESET;
                 }
             }
 
