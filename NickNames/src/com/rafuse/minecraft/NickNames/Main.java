@@ -312,13 +312,20 @@ public class Main extends JavaPlugin
             String[] args
     )
     {
-        sender.sendMessage(PREFIX+" Identities of online players:");
-        for(Player p : getServer().getOnlinePlayers())
+        if(sender.hasPermission("nicknames.realnicks"))
         {
-            String message = String.format("Display Name: %s"+ChatColor
-                    .RESET+" Real Name: %s", p.getDisplayName(), p
-                    .getName());
-            sender.sendMessage(message);
+            sender.sendMessage(PREFIX+" Identities of online players:");
+            for(Player p : getServer().getOnlinePlayers())
+            {
+                sender.sendMessage("Display Name: "+p.getDisplayName());
+                sender.sendMessage("     Real Name: "+p.getName());
+            }
+            sender.sendMessage(PREFIX+" End of online players.");
+        }
+        else
+        {
+            sender.sendMessage(PREFIX+" I'm sorry, you do not have access " +
+                    "to this command.");
         }
         return true;
     }
