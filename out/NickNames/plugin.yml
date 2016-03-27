@@ -1,5 +1,5 @@
 name: NickNames
-version: 0.3.4
+version: 0.4.0
 description: A plugin to change the nick names of users.
 author: Halo4356
 main: com.rafuse.minecraft.NickNames.Main
@@ -12,8 +12,10 @@ commands:
     usage: /reset, /reset [Player]
   color:
     description: Set your or another person's name's color.
-    usage: /color [color code], /colour [colour code], /color [Player]
-    [color code], /colour [Player], [colour code]
+    usage: /color [color code], /color [Player] [color code]
+  colour:
+    description: Set your or another person's name's color.
+    usage: /colour [colour code], /colour [Player] [colour code]
 permissions:
   nicknames.nick:
     description: Permission on nick yourself
