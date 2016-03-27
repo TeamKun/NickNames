@@ -292,6 +292,20 @@ public class Main extends JavaPlugin
                     newName = c+target.getName();
                 }
             }
+
+            if(newName != null)
+            {
+                String[] newArgs = new String[1];
+                newArgs[0] = newName;
+                setNick(target, newName);
+            }
+            else
+            {
+                player.sendMessage(ChatColor.DARK_RED+"Syntax Error!");
+                player.sendMessage("Usage:");
+                player.sendMessage("/colour [1-9, a-f] - Set your name's " +
+                        "colour");
+            }
         }
         else if(!player.hasPermission("nicknames.color") || !player
                 .hasPermission("nicknames.color.other"))
