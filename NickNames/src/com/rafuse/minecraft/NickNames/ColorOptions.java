@@ -28,7 +28,10 @@ public enum ColorOptions
     BOLD("bold", ChatColor.BOLD),
     ITALIC("italic", ChatColor.ITALIC),
     RESET("reset", ChatColor.RESET);
-    private ColorOptions(String name, ChatColor color)
+    ColorOptions(
+            String name,
+            ChatColor color
+    )
     {
         this.name = name;
         this.color = color;
