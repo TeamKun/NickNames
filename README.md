@@ -18,16 +18,16 @@ For now: download the .jar file found in target. I will streamline this eventual
 
 __NOTE: /color and /colour both work in all below commands.__
 
-`/color list` - Lists availiable colours.
-`/color [Player] [Color]` - Changes the colour of the target player. Name is unchanged, only the colour changes.
-`/color [Color]` - Same as above, but a shortcut to change your own colour.
+`/color list` - Lists availiable colours.  
+`/color [Player] [Color]` - Changes the colour of the target player. Name is unchanged, only the colour changes.  
+`/color [Color]` - Same as above, but a shortcut to change your own colour.  
 
 ####/reset
-`/reset [Player]` - Resets a given player's name to the default minecraft name.
-`/reset` - Resets your name.
+`/reset [Player]` - Resets a given player's name to the default minecraft name.  
+`/reset` - Resets your name.  
 
 ####/realnicks
-`/realnicks` - Lists online players, showing both their display name and their true identity.
+`/realnicks` - Lists online players, showing both their display name and their true identity.  
 
 ## Contributing
 
