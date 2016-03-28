@@ -43,17 +43,17 @@ Halo4356 - I did all of this. I'm so good at programming.
 
 ## License
 
-CyanogenMod members or anyone else on this website is not responsible for bricked devices, dead SD cards, thermonuclear war, or you getting fired because the alarm app failed. Please do some research if you have any concerns about features included in the products you find here before flashing it! YOU are choosing to make these modifications, and if you point the finger at us for messing up your device, we will laugh at you. Your warranty will be void if you tamper with any part of your device / software.
+`CyanogenMod members or anyone else on this website is not responsible for bricked devices, dead SD cards, thermonuclear war, or you getting fired because the alarm app failed. Please do some research if you have any concerns about features included in the products you find here before flashing it! YOU are choosing to make these modifications, and if you point the finger at us for messing up your device, we will laugh at you. Your warranty will be void if you tamper with any part of your device / software.`
 
 Wait, wrong license.
 
-MIT License
+`MIT License`
 
-Copyright (c) 2016 Halo4356/Matthew Rafuse
+`Copyright (c) 2016 Halo4356/Matthew Rafuse`
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
+`Permission is hereby granted, free of charge, to any person obtaining a copy`
+`of this software and associated documentation files (the "Software"), to deal`
+`in the Software without restriction, including without limitation the rights`
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
@@ -67,4 +67,4 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+SOFTWARE.`
