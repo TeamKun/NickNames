@@ -5,7 +5,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
@@ -13,7 +17,7 @@ import java.io.*;
 /**
  * Created by Sierra6767 on 3/26/2016.
  */
-public class Main extends JavaPlugin
+public class Main extends JavaPlugin implements Listener
 {
 
     // This prefix is the universal prefix for the plugin.
@@ -24,8 +28,7 @@ public class Main extends JavaPlugin
     public void onEnable()
     {
         // register the login listener to listen for player login events.
-        getServer().getPluginManager().registerEvents(new LoginListener(),
-                this);
+        getServer().getPluginManager().registerEvents(this, this);
         // Make the plugin directory if it doesn't exist
         new File(getDataFolder()+"/").mkdir();
 
@@ -558,5 +561,17 @@ public class Main extends JavaPlugin
         Bukkit.broadcastMessage(PREFIX + " Changed " + player.getName()
                 + ChatColor.RESET + "'s name to " + player
                 .getDisplayName() + ChatColor.RESET + ".");
+    }
+
+    @EventHandler
+    public void onPlayerLogin(PlayerJoinEvent event)
+    {
+        String newName = (String) getConfig().get("players."+event.getPlayer().getName().toLowerCase());
+
+        if(newName != null)
+        {
+            event.getPlayer().setDisplayName(newName);
+            event.getPlayer().setPlayerListName(newName);
+        }
     }
 }
