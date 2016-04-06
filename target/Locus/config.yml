@@ -1,0 +1,40 @@
+locum:
+  halo4356_home_halo4356:
+    ==: com.rafuse.minecraft.Locus.LocusPoint
+    owner: halo4356
+    name: halo4356_HOME_halo4356
+    isPublic: false
+    location:
+      ==: org.bukkit.Location
+      world: world
+      x: 13.300000011920929
+      y: 73.0
+      z: -43.522999507077245
+      pitch: 12.571497
+      yaw: -201.51955
+  potato:
+    ==: com.rafuse.minecraft.Locus.LocusPoint
+    owner: halo4356
+    name: potato
+    isPublic: true
+    location:
+      ==: org.bukkit.Location
+      world: world
+      x: 12.583163474265941
+      y: 69.0
+      z: -37.34543158568298
+      pitch: 45.889816
+      yaw: -319.55414
+  other:
+    ==: com.rafuse.minecraft.Locus.LocusPoint
+    owner: halo4356
+    name: other
+    isPublic: true
+    location:
+      ==: org.bukkit.Location
+      world: world
+      x: -29.316412365353536
+      y: 72.0
+      z: -99.11278891300104
+      pitch: 14.981297
+      yaw: -231.95665

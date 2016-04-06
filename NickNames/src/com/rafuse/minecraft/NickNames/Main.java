@@ -27,7 +27,21 @@ public class Main extends JavaPlugin
         getServer().getPluginManager().registerEvents(new LoginListener(),
                 this);
         // Make the plugin directory if it doesn't exist
-        new File(new File("").getAbsolutePath() + "/plugins/NickNames").mkdir();
+        new File(getDataFolder()+"/").mkdir();
+
+        File config = new File(getDataFolder()+"/config.yml");
+        if(!config.isFile())
+        {
+            try
+            {
+                config.createNewFile();
+                getLogger().info("Creating config.yml");
+            }
+            catch(IOException e)
+            {
+                getLogger().severe("Unable to create config.yml");
+            }
+        }
     }
 
     @Override
@@ -45,14 +59,16 @@ public class Main extends JavaPlugin
         if (command.getName().equalsIgnoreCase("nick"))
         {
             return nick(sender, command, label, args);
-        } else if (command.getName().equalsIgnoreCase("reset"))
+        }
+        else if (command.getName().equalsIgnoreCase("reset"))
         {
             return reset(sender, command, label, args);
-        } else if (command.getName().equalsIgnoreCase("color") || command
-                .getName().equalsIgnoreCase("colour"))
+        }
+        else if (command.getName().equalsIgnoreCase("color") || command.getName().equalsIgnoreCase("colour"))
         {
             return colour(sender, command, label, args);
-        } else if (command.getName().equalsIgnoreCase("realnicks"))
+        }
+        else if (command.getName().equalsIgnoreCase("realnicks"))
         {
             return realnicks(sender, command, label, args);
         }
@@ -70,18 +86,16 @@ public class Main extends JavaPlugin
     )
     {
         // Command usage
-        if (args.length == 0 && (sender.hasPermission("nicknames.nick")
-                || sender.hasPermission("nicknames.nick.other")))
+        if (args.length == 0 && (sender.hasPermission("nicknames.nick") || sender.hasPermission("nicknames.nick.other")))
         {
             sender.sendMessage("Usage:");
-            sender.sendMessage("/nick [Player] [Nickname] - Nick " +
-                    "another player");
+            sender.sendMessage("/nick [Player] [Nickname] - Nick another player");
             sender.sendMessage("/nick [Nickname] - Nick yourself");
         }
         // Setting your own nickname
         else if (args.length == 1 && sender.hasPermission("nicknames.nick"))
         {
-            // This if statement enxures the console or command block cannot
+            // This if statement ensures the console or command block cannot
             // Set it's own nick name.
             if (!(sender instanceof Player)) return false;
 
@@ -96,14 +110,12 @@ public class Main extends JavaPlugin
             setNick(player, newName);
         }
         // Setting someone else's nickname
-        else if (args.length == 2 && sender.hasPermission("nicknames" +
-                ".nick.other"))
+        else if (args.length == 2 && sender.hasPermission("nicknames.nick.other"))
         {
             // Get the name of the target player
             String targetPlayer = args[0];
 
-            //Make the syntax correct. & is a popular way to set colours,
-            // but bukkit only accept the §.
+            //Make the syntax correct. & is a popular way to set colours, but bukkit only accepts the §.
             String newName = args[1].replace("&", "§") + "§f§r";
 
             // Target starts as null.
@@ -133,11 +145,9 @@ public class Main extends JavaPlugin
             }
         }
         // Insufficient permissions?
-        else if (!sender.hasPermission("nicknames.nick") && !sender
-                .hasPermission("nicknames.nick.other"))
+        else if (!sender.hasPermission("nicknames.nick") && !sender.hasPermission("nicknames.nick.other"))
         {
-            sender.sendMessage(PREFIX + " I'm sorry, you do not have access " +
-                    "to this command.");
+            sender.sendMessage(PREFIX + " I'm sorry, you do not have access to this command.");
         }
         // Too many arguments -> Syntax Error
         else if (args.length > 2)
@@ -145,8 +155,7 @@ public class Main extends JavaPlugin
             sender.sendMessage(ChatColor.DARK_RED + "Syntax Error!");
             sender.sendMessage("Usage:");
             sender.sendMessage("/nick [Nickname] - Nick yourself");
-            sender.sendMessage("/nick [Player] [Nickname] - Nick " +
-                    "another player");
+            sender.sendMessage("/nick [Player] [Nickname] - Nick another player");
         }
         return true;
     }
@@ -168,30 +177,15 @@ public class Main extends JavaPlugin
 
             Player player = (Player) sender;
 
-            // Open the user's data file
-            File userData = new File(new File("").getAbsolutePath()
-                    + "/plugins/NickNames/" + player.getName().toLowerCase() +
-                    ".yml");
+            // Set the player's saved nickname to null, deleting it
+            getConfig().set("players."+player.getName().toLowerCase(), null);
+            saveConfig();
 
-            // If the file exists, delete it.
-            if (userData.isFile())
-            {
-                userData.delete();
+            player.setDisplayName(player.getName());
+            player.setPlayerListName(player.getName());
 
-                // Reset the user's display names
-                player.setDisplayName(player.getName());
-                player.setPlayerListName(player.getName());
-
-                // Notify the server
-                Bukkit.broadcastMessage(PREFIX + " " + player.getName() + "'s " +
-                        "nickname has been reset to default.");
-            }
-            // If the file does not exist, user does not have a nick name.
-            else
-            {
-                player.sendMessage(PREFIX + " You do not have a nickname. No " +
-                        "action was taken.");
-            }
+            // Notify the server
+            Bukkit.broadcastMessage(PREFIX + " " + player.getName() + "'s nickname has been reset to default.");
         }
         // Reset another user
         else if (args.length == 1 && sender.hasPermission("nicknames.reset" +
@@ -200,44 +194,28 @@ public class Main extends JavaPlugin
             // Get the target of the reset
             String targetPlayer = args[0];
 
-            // See if tha target has a user data file
-            File userData = new File(new File("").getAbsolutePath()
-                    + "/plugins/NickNames/" + targetPlayer.toLowerCase() + ".yml");
+            getConfig().set("players."+targetPlayer.toLowerCase(), null);
+            saveConfig();
 
-            // If the file exists
-            if (userData.isFile())
+            Player target = null;
+            for (Player p : getServer().getOnlinePlayers())
             {
-                // Delete it
-                userData.delete();
-
-                // Check to see if the palyer is on
-                Player target = null;
-                for (Player p : getServer().getOnlinePlayers())
+                if (p.getName().equalsIgnoreCase(targetPlayer))
                 {
-                    if (p.getName().equalsIgnoreCase(targetPlayer))
-                    {
-                        target = p;
-                    }
+                    target = p;
                 }
-
-                // If the player is on, reset their names.
-                if (target != null)
-                {
-                    target.setDisplayName(target.getName());
-                    target.setPlayerListName(target.getName());
-                }
-
-                // Notify the server
-                Bukkit.broadcastMessage(PREFIX + " " + targetPlayer + "'s " +
-                        "nickname has been reset to default.");
             }
-            // If the file does not exist, the player did not have a nick
-            // name.
-            else
+
+            // If the player is on, reset their names.
+            if (target != null)
             {
-                sender.sendMessage(PREFIX + " " + targetPlayer + " does no currently " +
-                        "have a nickname. No action was taken");
+                target.setDisplayName(target.getName());
+                target.setPlayerListName(target.getName());
             }
+
+            // Notify the server
+            Bukkit.broadcastMessage(PREFIX + " " + targetPlayer + "'s " +
+                    "nickname has been reset to default.");
         }
         // Insufficient permissions
         else if (!sender.hasPermission("nicknames.reset") ||
@@ -527,6 +505,7 @@ public class Main extends JavaPlugin
             String[] args
     )
     {
+        // TODO read up about configuration API for bukkit
         // Make sure the user has sufficient perms
         if (sender.hasPermission("nicknames.realnicks"))
         {
@@ -563,47 +542,8 @@ public class Main extends JavaPlugin
             String newName
     )
     {
-        // Find the user's data file for editing.
-        File userFile = new File(new File("").getAbsolutePath() +
-                "/plugins/NickNames/" + player.getName().toLowerCase() +
-                ".yml");
-
-        // Check if the file has been created. If not, create it.
-        if (!userFile.isFile())
-        {
-            // Mention this in the logs
-            getLogger().info("No file information found for " + player
-                    .getName() + ": Will create now.");
-
-            // Try to create the new file
-            try
-            {
-                userFile.createNewFile();
-            } catch (IOException e)
-            {
-                getLogger().warning(e + "");
-            }
-        }
-
-        PrintWriter writer;
-        // try block should never fail
-        try
-        {
-            writer = new PrintWriter(userFile);
-        } catch (IOException e)
-        {
-            getLogger().warning(e + "");
-            writer = null;
-        }
-
-        // Write the new nickname
-        if (writer != null)
-        {
-            writer.println(newName);
-        }
-
-        // Write changes to disk
-        writer.close();
+        getConfig().set("players."+player.getName().toLowerCase(), newName);
+        saveConfig();
 
         // Change the display name of the user to the new name
         player.setDisplayName(newName);

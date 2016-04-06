@@ -14,29 +14,12 @@ public class LoginListener implements Listener
     @EventHandler
     public void onPlayerLogin(PlayerJoinEvent event)
     {
+        String newName = (String) new Main().getConfig().get("players."+event.getPlayer().getName().toLowerCase());
 
-
-        File playerInfo = new File(new File("").getAbsolutePath()
-                +"/plugins/NickNames/"+event.getPlayer().getName().toLowerCase()+".yml");
-
-        if(playerInfo.isFile())
+        if(newName != null)
         {
-            String newName;
-            try
-            {
-                BufferedReader reader = new BufferedReader(new FileReader
-                        (playerInfo));
-                newName = reader.readLine();
-
-                event.getPlayer().setDisplayName(newName);
-                event.getPlayer().setPlayerListName(newName);
-
-                reader.close();
-            }
-            catch(IOException e)
-            {
-                new Main().getLogger().warning(e+"");
-            }
+            event.getPlayer().setDisplayName(newName);
+            event.getPlayer().setPlayerListName(newName);
         }
     }
 }
