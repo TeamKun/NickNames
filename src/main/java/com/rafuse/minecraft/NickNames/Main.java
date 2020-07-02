@@ -192,7 +192,7 @@ public class Main extends JavaPlugin implements Listener
             applyNick(player, player.getName());
 
             // Notify the server
-            Bukkit.broadcastMessage(PREFIX + " " + player.getName() + "'s nickname has been reset to default.");
+            sender.sendMessage(PREFIX + " " + player.getName() + "'s nickname has been reset to default.");
         }
         // Reset another user
         else if (args.length == 1 && sender.hasPermission("nicknames.reset" +
@@ -204,23 +204,21 @@ public class Main extends JavaPlugin implements Listener
             getConfig().set("players."+targetPlayer.toLowerCase(), null);
             saveConfig();
 
-            Player target = null;
-            for (Player p : getServer().getOnlinePlayers())
-            {
-                if (p.getName().equalsIgnoreCase(targetPlayer))
-                {
-                    target = p;
-                }
-            }
+            // Target starts off null
+            List<Player> targets = Arrays.stream(CommandUtils.getTargets(sender, targetPlayer))
+                    .filter(Player.class::isInstance)
+                    .map(Player.class::cast)
+                    .collect(Collectors.toList());
 
             // If the player is on, reset their names.
-            if (target != null)
+            if (!targets.isEmpty())
             {
-                applyNick(target, target.getName());
+                for (Player target : targets)
+                    applyNick(target, target.getName());
             }
 
             // Notify the server
-            Bukkit.broadcastMessage(PREFIX + " " + targetPlayer + "'s " +
+            sender.sendMessage(PREFIX + " " + targetPlayer + "'s " +
                     "nickname has been reset to default.");
         }
         // Insufficient permissions
@@ -463,8 +461,8 @@ public class Main extends JavaPlugin implements Listener
     )
     {
         // Change the display name of the user to the new name
-        player.setDisplayName(newName);
-        player.setPlayerListName(newName);
+        player.setDisplayName(newName != null ? newName : player.getName());
+        player.setPlayerListName(newName != null ? newName : player.getName());
         nameChanger.changeName(player, newName);
     }
 

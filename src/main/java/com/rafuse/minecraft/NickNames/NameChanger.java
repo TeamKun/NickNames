@@ -88,20 +88,10 @@ public class NameChanger {
      * @param fakeName the player's new name
      */
     public void changeName(final Player player, String fakeName) {
-        fakeNames.put(player, fakeName);
-        refresh(player);
-    }
-    
-    /**
-     * Reset the player's name to it's original value
-     * <br>
-     * The player may disappear for approximately 2 ticks after you change it
-     * </br>
-     * @param player player whos name to change back to the original value
-     */
-    public void changeName(Player player) {
-        if (!fakeNames.containsKey(player))
-        fakeNames.remove(player);
+        if (fakeName != null)
+            fakeNames.put(player, fakeName);
+        else if (!fakeNames.containsKey(player))
+            fakeNames.remove(player);
         refresh(player);
     }
     
