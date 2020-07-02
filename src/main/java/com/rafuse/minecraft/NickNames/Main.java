@@ -13,12 +13,18 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by Sierra6767 on 3/26/2016.
+ * Edited by Kamesuta on 7/02/2020.
  */
 public class Main extends JavaPlugin implements Listener
 {
+    private NameChanger nameChanger;
 
     // This prefix is the universal prefix for the plugin.
     public static final String PREFIX = ChatColor.RESET + "[" + ChatColor
@@ -45,6 +51,8 @@ public class Main extends JavaPlugin implements Listener
                 getLogger().severe("Unable to create config.yml");
             }
         }
+
+        nameChanger = new NameChanger(this);
     }
 
     @Override
@@ -105,12 +113,16 @@ public class Main extends JavaPlugin implements Listener
             // Cast the player to the correct object
             Player player = (Player) sender;
 
+            // Get the name of the target player
+            String targetPlayer = args[0];
+
             //Make the syntax correct. & is a popular way to set colours,
             // but bukkit only accept the §.
-            String newName = args[0].replace("&", "§") + "§f§r";
+            String newName = targetPlayer.replace("&", "§") + "§f§r";
 
             // Set the nickname
             setNick(player, newName);
+            sendNickWithFeedback(sender, targetPlayer, newName);
         }
         // Setting someone else's nickname
         else if (args.length == 2 && sender.hasPermission("nicknames.nick.other"))
@@ -122,24 +134,17 @@ public class Main extends JavaPlugin implements Listener
             String newName = args[1].replace("&", "§") + "§f§r";
 
             // Target starts as null.
-            Player target = null;
-
-            // This runs through all online players.
-            for (Player p : getServer().getOnlinePlayers())
-            {
-                // Check for a matching player
-                if (p.getName().equalsIgnoreCase(targetPlayer))
-                {
-                    // If found, set target
-                    target = p;
-                    break;
-                }
-            }
+            List<Player> targets = Arrays.stream(CommandUtils.getTargets(sender, targetPlayer))
+                    .filter(Player.class::isInstance)
+                    .map(Player.class::cast)
+                    .collect(Collectors.toList());
 
             // If the search was successful run the commmand
-            if (target != null)
+            if (!targets.isEmpty())
             {
-                setNick(target, newName);
+                for (Player target : targets)
+                    setNick(target, newName);
+                sendNickWithFeedback(sender, targetPlayer, newName);
             }
             // Else throw an error
             else
@@ -184,8 +189,7 @@ public class Main extends JavaPlugin implements Listener
             getConfig().set("players."+player.getName().toLowerCase(), null);
             saveConfig();
 
-            player.setDisplayName(player.getName());
-            player.setPlayerListName(player.getName());
+            applyNick(player, player.getName());
 
             // Notify the server
             Bukkit.broadcastMessage(PREFIX + " " + player.getName() + "'s nickname has been reset to default.");
@@ -212,8 +216,7 @@ public class Main extends JavaPlugin implements Listener
             // If the player is on, reset their names.
             if (target != null)
             {
-                target.setDisplayName(target.getName());
-                target.setPlayerListName(target.getName());
+                applyNick(target, target.getName());
             }
 
             // Notify the server
@@ -297,10 +300,13 @@ public class Main extends JavaPlugin implements Listener
             // Cast the player froms sender
             Player player = (Player) sender;
 
+            // Get the target of the reset
+            String targetPlayer = args[0];
+
             String newName = null;
             for (ColorOptions c : ColorOptions.values())
             {
-                if (args[0].equalsIgnoreCase(c.getName()))
+                if (targetPlayer.equalsIgnoreCase(c.getName()))
                 {
                     newName =
                             c + "" + player.getName().toUpperCase().charAt(0)
@@ -316,60 +322,47 @@ public class Main extends JavaPlugin implements Listener
             } else
             {
                 setNick(player, newName);
+                sendNickWithFeedback(sender, targetPlayer, newName);
             }
         }
         // Changing another player's color
         else if (args.length == 2 && sender.hasPermission("nicknames.color" +
                 ".other"))
         {
-            // Get the target player's name
-            String targetPlayer = args[0];
-
-            // Target starts off null
-            Player target = null;
-
-            // Check if player is online
-            for (Player p : getServer().getOnlinePlayers())
-            {
-                if (p.getName().equalsIgnoreCase(targetPlayer))
-                {
-                    target = p;
-                    break;
-                }
-            }
-
             // Check if the color chosen is a real supported color
-            String newName = null;
-            for (ColorOptions c : ColorOptions.values())
-            {
-                if (args[1].equalsIgnoreCase(c.getName()))
-                {
-                    newName =
-                            c + "" + target.getName().toUpperCase().charAt(0) +
-                                    target.getName().substring(1) + ChatColor.RESET;
-                }
-            }
+            Optional<ColorOptions> colorOptional = Arrays.stream(ColorOptions.values())
+                    .filter(e -> args[1].equalsIgnoreCase(e.getName()))
+                    .findFirst();
 
-            // If it is a supported color and the player is online
-            if (newName != null && target != null)
-            {
-                setNick(target, newName);
-            }
-            // If not, syntax error or player isn't online
-            else
-            {
-                if (target == null)
-                {
+            if (!colorOptional.isPresent()) {
+                sender.sendMessage(ChatColor.DARK_RED + "Syntax Error!");
+                sender.sendMessage("Usage:");
+                sender.sendMessage("/colour [colour] - Set your name's colour");
+                sender.sendMessage("/colour [player] [colour] - Set another" +
+                        " player's colour");
+                sender.sendMessage("see /colour list for list of colours.");
+            } else {
+                // Get the target player's name
+                String targetPlayer = args[0];
+
+                // Target starts off null
+                List<Player> targets = Arrays.stream(CommandUtils.getTargets(sender, targetPlayer))
+                        .filter(Player.class::isInstance)
+                        .map(Player.class::cast)
+                        .collect(Collectors.toList());
+
+                if (targets.isEmpty()) {
                     sender.sendMessage(PREFIX+" Player is not currently " +
                             "online.");
-                } else
-                {
-                    sender.sendMessage(ChatColor.DARK_RED + "Syntax Error!");
-                    sender.sendMessage("Usage:");
-                    sender.sendMessage("/colour [colour] - Set your name's colour");
-                    sender.sendMessage("/colour [player] [colour] - Set another" +
-                            " player's colour");
-                    sender.sendMessage("see /colour list for list of colours.");
+                } else {
+                    // If it is a supported color and the player is online
+                    colorOptional.ifPresent(color -> {
+                        for (Player target : targets) {
+                            String newName = color + "" + target.getName().toUpperCase().charAt(0) + target.getName().substring(1) + ChatColor.RESET;
+                            setNick(target, newName);
+                        }
+                        sendNickWithFeedback(sender, targetPlayer, color.getName());
+                    });
                 }
             }
         }
@@ -389,111 +382,6 @@ public class Main extends JavaPlugin implements Listener
             sender.sendMessage("/colour [player] [colour] - Set another" +
                     " player's colour");
             sender.sendMessage("see /colour list for list of colours.");
-        }
-        return true;
-    }
-
-    /**
-     * Old version of color. took a number or char instead of string input.
-     * retired for better version.
-     */
-    @Deprecated
-    public boolean legacyColour(
-            CommandSender sender,
-            Command command,
-            String label,
-            String[] args
-    )
-    {
-        if (!(sender instanceof Player)) return false;
-
-        Player player = (Player) sender;
-
-        if (args.length == 0 && (player.hasPermission("nicknames.color") ||
-                player.hasPermission("nicknames.color.other")))
-        {
-            player.sendMessage("Usage:");
-            player.sendMessage("/colour [colour] - Set your name's colour");
-            player.sendMessage("/colour [player] [colour] - Set another" +
-                    " player's colour");
-            player.sendMessage("see /colour list for list of colours.");
-        } else if (args.length == 1 && args[0].length() == 1 && player
-                .hasPermission("nicknames.color"))
-        {
-            String newName = null;
-            char newColour = args[0].charAt(0);
-
-            for (ChatColor c : ChatColor.values())
-            {
-                if (c.getChar() == newColour)
-                {
-                    newName = c + player.getName() + ChatColor.RESET;
-                }
-            }
-            if (newName != null)
-            {
-                String[] newArgs = new String[1];
-                newArgs[0] = newName;
-                setNick(player, newName);
-            } else
-            {
-                sender.sendMessage(ChatColor.DARK_RED + "Syntax Error!");
-                player.sendMessage("Usage:");
-                player.sendMessage("/colour [colour] - Set your name's colour");
-                player.sendMessage("/colour [player] [colour] - Set another" +
-                        " player's colour");
-                player.sendMessage("see /colour list for list of colours.");
-            }
-        } else if (args.length == 2 && args[1].length() == 1 && player
-                .hasPermission("nicknames.color.other"))
-        {
-
-            String playerToChange = args[0];
-            Player target = null;
-
-            for (Player p : getServer().getOnlinePlayers())
-            {
-                if (p.getName().equalsIgnoreCase(playerToChange))
-                {
-                    target = p;
-                    break;
-                }
-            }
-
-            String newName = null;
-            char newColour = args[1].charAt(0);
-
-            for (ChatColor c : ChatColor.values())
-            {
-                if (c.getChar() == newColour)
-                {
-                    newName = c + target.getName() + ChatColor.RESET;
-                }
-            }
-
-            if (newName != null)
-            {
-                String[] newArgs = new String[1];
-                newArgs[0] = newName;
-                setNick(target, newName);
-            } else
-            {
-                player.sendMessage(ChatColor.DARK_RED + "Syntax Error!");
-                player.sendMessage("Usage:");
-                player.sendMessage("/colour [1-9, a-f] - Set your name's " +
-                        "colour");
-            }
-        } else if (!player.hasPermission("nicknames.color") || !player
-                .hasPermission("nicknames.color.other"))
-        {
-            player.sendMessage(PREFIX + " I'm sorry, you do not have access " +
-                    "to this command.");
-        } else if (args.length > 2 || args[0].length() > 1)
-        {
-            player.sendMessage(ChatColor.DARK_RED + "Syntax Error!");
-            player.sendMessage("Usage:");
-            player.sendMessage("/colour [1-9, a-f] - Set your name's " +
-                    "colour");
         }
         return true;
     }
@@ -549,18 +437,35 @@ public class Main extends JavaPlugin implements Listener
         saveConfig();
 
         // Change the display name of the user to the new name
+        applyNick(player, newName);
+    }
+
+    private void sendNickWithFeedback(
+            CommandSender sender,
+            String targetName,
+            String newName
+    )
+    {
+        // Mention it in the logs
+        getLogger().info("Changed " + targetName
+                + ChatColor.RESET + "'s name to " + newName
+                + ChatColor.RESET + ".");
+
+        // Feedback
+        sender.sendMessage(PREFIX + " Changed " + targetName
+                + ChatColor.RESET + "'s name to " + newName
+                + ChatColor.RESET + ".");
+    }
+
+    private void applyNick(
+           Player player,
+           String newName
+    )
+    {
+        // Change the display name of the user to the new name
         player.setDisplayName(newName);
         player.setPlayerListName(newName);
-
-        // Mention it in the logs
-        getLogger().info("Changed " + player.getName() + ChatColor
-                .RESET + "'s name to " + player.getDisplayName() +
-                ChatColor.RESET + ".");
-
-        // Broadcast to all players
-        Bukkit.broadcastMessage(PREFIX + " Changed " + player.getName()
-                + ChatColor.RESET + "'s name to " + player
-                .getDisplayName() + ChatColor.RESET + ".");
+        nameChanger.changeName(player, newName);
     }
 
     @EventHandler
@@ -570,8 +475,7 @@ public class Main extends JavaPlugin implements Listener
 
         if(newName != null)
         {
-            event.getPlayer().setDisplayName(newName);
-            event.getPlayer().setPlayerListName(newName);
+            applyNick(event.getPlayer(), newName);
         }
     }
 }
